@@ -237,23 +237,13 @@
     </div>
 
     <!-- Evento 2 -->
-  <!-- Evento 2 -->
-    <div class="timeline-item right">
+ <div class="timeline-item right">
       <div class="content" onclick="toggleCard(this)">
         <span class="tag">Métrica e Ritmo</span>
         <h2>2. A Divisão Proporcional do Tempo</h2>
         <p class="short-desc">A hierarquia geométrica das figuras rítmicas.</p>
         <div class="details">
-          <p>As figuras de valor não possuem um tempo absoluto, mas sim proporcional. A <strong>Semibreve (1)</strong> representa a unidade inteira. Suas subdivisões são:</p>
-          <ul style="list-style: none; padding-left: 0; margin-top: 8px; line-height: 1.8;">
-            <li><span style="font-size: 1.4rem;">𝄺</span> <strong>Semibreve:</strong> 1 (Unidade de Valor)</li>
-            <li><span style="font-size: 1.4rem;">𝄻</span> <strong>Mínima:</strong> 2 (Metade da semibreve)</li>
-            <li><span style="font-size: 1.4rem;">𝄼</span> <strong>Semínima:</strong> 4 (Um quarto)</li>
-            <li><span style="font-size: 1.4rem;">𝄽</span> <strong>Colcheia:</strong> 8 (Um oitavo)</li>
-            <li><span style="font-size: 1.4rem;">𝄾</span> <strong>Semicolcheia:</strong> 16 (Um dezesseis avos)</li>
-            <li><span style="font-size: 1.4rem;">𝄿</span> <strong>Fusa:</strong> 32</li>
-            <li><span style="font-size: 1.4rem;">𝅀</span> <strong>Semifusa:</strong> 64</li>
-          </ul>
+          <p>As figuras de valor não possuem um tempo absoluto, mas sim proporcional. A Semibreve (1) representa a unidade inteira. Suas subdivisões são: Mínima (2), Semínima (4), Colcheia (8), Semicolcheia (16), Fusa (32) e Semifusa (64).</p>
         </div>
       </div>
     </div>
@@ -383,7 +373,7 @@
   </div>
 
   <footer>
-    <p>Projeto de Estruturação Musical — Desenvolvido para publicação interativa no GitHub Pages.</p>
+    <p>Projeto de Estruturação Musical — UniSant'Anna.</p>
   </footer>
 
   <script>
@@ -405,37 +395,53 @@
       }
     }
 
-    // Web Audio API para síntese de som interativa
+    // Web Audio API com Timbre Harmônico Natural e Envelope de Volume
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playTone(freq, duration, event) {
-      event.stopPropagation();
+      if (event) event.stopPropagation();
       if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const now = audioCtx.currentTime;
       
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-      
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
+      // Criamos um ganho principal com envelope suave (Ataque e Decaimento)
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0, now);
+      masterGain.gain.linearRampToValueAtTime(0.15, now + 0.05); // Ataque suave de 50ms
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration); // Fade out natural
+
+      masterGain.connect(audioCtx.destination);
+
+      // Harmônicos para enriquecer o timbre (1ª Fundamental + 2ª Oitava + 3ª Quinta)
+      const harmonics = [
+        { mult: 1, gain: 1.0, type: 'sine' },      // Frequência Fundamental
+        { mult: 2, gain: 0.3, type: 'triangle' },  // 1ª Oitava acima (dá brilho de piano/órgão)
+        { mult: 3, gain: 0.1, type: 'sine' }       // 5ª harmônica (dá profundidade)
+      ];
+
+      harmonics.forEach(h => {
+        const osc = audioCtx.createOscillator();
+        const oscGain = audioCtx.createGain();
+
+        osc.type = h.type;
+        osc.frequency.setValueAtTime(freq * h.mult, now);
+        oscGain.gain.setValueAtTime(h.gain, now);
+
+        osc.connect(oscGain);
+        oscGain.connect(masterGain);
+
+        osc.start(now);
+        osc.stop(now + duration);
+      });
     }
 
     function playInterval(freq1, freq2, event) {
-      event.stopPropagation();
+      if (event) event.stopPropagation();
       playTone(freq1, 1.2, event);
-      setTimeout(() => playTone(freq2, 1.2, event), 400);
+      setTimeout(() => playTone(freq2, 1.2, null), 400);
     }
 
     function playChord(freqs, event) {
-      event.stopPropagation();
-      freqs.forEach(f => playTone(f, 2.0, event));
+      if (event) event.stopPropagation();
+      freqs.forEach(f => playTone(f, 2.5, null));
     }
-  </script>
-</body>
-</html>
