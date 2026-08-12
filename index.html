@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jornada da Estruturação Musical</title>
+  <title>Linha do Tempo: Jornada da Estruturação Musical</title>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -163,7 +163,7 @@
     }
 
     .content.active .details {
-      max-height: 300px;
+      max-height: 400px;
       border-top: 1px solid var(--border-color);
       margin-top: 12px;
       padding-top: 12px;
@@ -218,6 +218,7 @@
 
   <header>
     <h1>Jornada da Estruturação Musical</h1>
+    <p>Uma exploração interativa dos fundamentos da teoria musical, da física do som à harmonia funcional.</p>
     <p>Alessandra Cristine Moreira da Silva - Matrícula 1498500322.</p>
   </header>
 
@@ -236,8 +237,8 @@
       </div>
     </div>
 
-    <!-- Evento 2 -->
- <div class="timeline-item right">
+  <!-- Evento 2 -->
+    <div class="timeline-item right">
       <div class="content" onclick="toggleCard(this)">
         <span class="tag">Métrica e Ritmo</span>
         <h2>2. A Divisão Proporcional do Tempo</h2>
@@ -395,28 +396,38 @@
       }
     }
 
-    // Web Audio API com Timbre Harmônico Natural e Envelope de Volume
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Web Audio API com Timbre Suave e Trata de Eventos sem travar
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
 
     function playTone(freq, duration, event) {
-      if (event) event.stopPropagation();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+      
+      initAudio();
 
       const now = audioCtx.currentTime;
       
-      // Criamos um ganho principal com envelope suave (Ataque e Decaimento)
       const masterGain = audioCtx.createGain();
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(0.15, now + 0.05); // Ataque suave de 50ms
-      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration); // Fade out natural
+      masterGain.gain.linearRampToValueAtTime(0.15, now + 0.05);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       masterGain.connect(audioCtx.destination);
 
-      // Harmônicos para enriquecer o timbre (1ª Fundamental + 2ª Oitava + 3ª Quinta)
       const harmonics = [
-        { mult: 1, gain: 1.0, type: 'sine' },      // Frequência Fundamental
-        { mult: 2, gain: 0.3, type: 'triangle' },  // 1ª Oitava acima (dá brilho de piano/órgão)
-        { mult: 3, gain: 0.1, type: 'sine' }       // 5ª harmônica (dá profundidade)
+        { mult: 1, gain: 1.0, type: 'sine' },
+        { mult: 2, gain: 0.3, type: 'triangle' },
+        { mult: 3, gain: 0.1, type: 'sine' }
       ];
 
       harmonics.forEach(h => {
@@ -436,12 +447,19 @@
     }
 
     function playInterval(freq1, freq2, event) {
-      if (event) event.stopPropagation();
-      playTone(freq1, 1.2, event);
-      setTimeout(() => playTone(freq2, 1.2, null), 400);
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+      playTone(freq1, 1.2);
+      setTimeout(() => playTone(freq2, 1.2), 400);
     }
 
     function playChord(freqs, event) {
-      if (event) event.stopPropagation();
-      freqs.forEach(f => playTone(f, 2.5, null));
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+      freqs.forEach(f => playTone(f, 2.5));
     }
+  </script>
+</body>
+</html>
