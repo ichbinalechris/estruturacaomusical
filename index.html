@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jornada da Estruturação Musical</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #38bdf8;
+      --accent-hover: #0284c7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 3rem auto;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .share-btn {
+      margin-top: 1.5rem;
+      background-color: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .share-btn:hover {
+      background-color: var(--accent-hover);
+      color: #fff;
+    }
+
+    /* Timeline Container */
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    /* Linha Central */
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      background-color: var(--border-color);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -2px;
+    }
+
+    .timeline-item {
+      padding: 10px 40px;
+      position: relative;
+      background-color: inherit;
+      width: 50%;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: -10px;
+      background-color: var(--bg-color);
+      border: 4px solid var(--accent-color);
+      top: 20px;
+      border-radius: 50%;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      left: 50%;
+    }
+
+    .right::after {
+      left: -10px;
+    }
+
+    .content {
+      padding: 20px;
+      background-color: var(--card-bg);
+      position: relative;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .content:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.2);
+    }
+
+    .tag {
+      display: inline-block;
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .content h2 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .content p.short-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Detalhes Expansíveis */
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      border-top: 0px solid var(--border-color);
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .content.active .details {
+      max-height: 300px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+
+    .audio-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      background-color: #334155;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .audio-btn:hover {
+      background-color: var(--accent-color);
+      color: #000;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Responsividade */
+    @media screen and (max-width: 768px) {
+      .timeline::after {
+        left: 31px;
+      }
+      .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+      }
+      .timeline-item::after {
+        left: 21px;
+      }
+      .right {
+        left: 0%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Jornada da Estruturação Musical</h1>
+    <p>Alessandra Cristine Moreira da Silva - Matrícula 1498500322.</p>
+  </header>
+
+  <div class="timeline">
+
+    <!-- Evento 1 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Física da Música</span>
+        <h2>1. As 4 Propriedades do Som</h2>
+        <p class="short-desc">A base acústica de qualquer manifestação musical.</p>
+        <div class="details">
+          <p>Qualquer som possui quatro qualidades fundamentais: <strong>Altura</strong> (grave/agudo, dada pela frequência em Hz), <strong>Duração</strong> (tempo de emissão), <strong>Intensidade</strong> (volume/pressão sonora) e <strong>Timbre</strong> (a "assinatura" ou cor sonora do instrumento).</p>
+          <button class="audio-btn" onclick="playTone(440, 1, event)">▶ Ouvir Lá 440Hz (Altura)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 2 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Métrica e Ritmo</span>
+        <h2>2. A Divisão Proporcional do Tempo</h2>
+        <p class="short-desc">A hierarquia geométrica das figuras rítmicas.</p>
+        <div class="details">
+          <p>As figuras de valor não possuem um tempo absoluto, mas sim proporcional. A Semibreve (1) representa a unidade inteira. Suas subdivisões são: Mínima (2), Semínima (4), Colcheia (8), Semicolcheia (16), Fusa (32) e Semifusa (64).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 3 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Organização Rítmica</span>
+        <h2>3. Compassos Simples vs. Compostos</h2>
+        <p class="short-desc">Como o pulso e as subdivisões estruturam o tempo.</p>
+        <div class="details">
+          <p>Nos <strong>Compassos Simples</strong> (ex: 2/4, 3/4, 4/4), a unidade de tempo é dividida binariamente. Nos <strong>Compassos Compostos</strong> (ex: 6/8, 9/8, 12/8), a subdivisão principal é ternária e a unidade de tempo é sempre uma nota pontuada.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 4 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Sistemas de Notação</span>
+        <h2>4. O Pentagrama e o Endecagrama</h2>
+        <p class="short-desc">A visualização gráfica das alturas musicais.</p>
+        <div class="details">
+          <p>O pentagrama utiliza 5 linhas e 4 espaços. As claves (Sol, Fá, Dó) definem a referência das notas. O <strong>Endecagrama</strong> (sistema de 11 linhas) une as claves de Sol e Fá, tendo o Dó Central (Dó 3) como ponto cêntrico de articulação.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 5 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Micro-intervalos</span>
+        <h2>5. O Sistema Temperado e Alterações</h2>
+        <p class="short-desc">Sustenidos, bemóis e o conceito de enarmonia.</p>
+        <div class="details">
+          <p>O semitom é o menor intervalo no sistema ocidental temperado. Os acidentes (♯, ♭, 𝄪, 𝄫, ♮) alteram a altura das notas. Notas com nomes diferentes que produzem a mesma frequência são chamadas de <strong>Enarmônicas</strong> (ex: Dó♯ e Ré♭).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 6 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Estrutura Melódica</span>
+        <h2>6. Classificação de Intervalos</h2>
+        <p class="short-desc">A medição da distância entre dois sons.</p>
+        <div class="details">
+          <p>Intervalos são classificados numericamente (2ª, 3ª, 4ª, etc.) e qualificados como <strong>Justos</strong> (4ª, 5ª, 8ª) ou <strong>Maiores/Menores</strong> (2ª, 3ª, 6ª, 7ª). Modificações de semitons criam intervalos Aumentados ou Diminutos.</p>
+          <button class="audio-btn" onclick="playInterval(261.63, 392.00, event)">▶ Ouvir Quinta Justa (Dó-Sol)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 7 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Arquitetura Tonal</span>
+        <h2>7. A Escala Maior Tonal</h2>
+        <p class="short-desc">O pilar da música ocidental moderna.</p>
+        <div class="details">
+          <p>A escala maior é uma sequência heptatônica definida pela estrutura rigorosa de intervalos: <strong>Tom - Tom - Semitom - Tom - Tom - Tom - Semitom</strong>. Os semitons estão fixos entre os graus 3º-4º e 7º-8º.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 8 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Arquitetura Tonal</span>
+        <h2>8. As Escalas Menores</h2>
+        <p class="short-desc">Natural, Harmônica e Melódica.</p>
+        <div class="details">
+          <p>A escala <strong>Menor Natural</strong> possui semitons entre 2º-3º e 5º-6º. A <strong>Menor Harmônica</strong> eleva o 7º grau para criar uma sensível artificial. A <strong>Menor Melódica</strong> eleva o 6º e 7º graus na subida para suavizar o salto de 2ª aumentada.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 9 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Relações Modulares</span>
+        <h2>9. O Ciclo das Quintas e Quartas</h2>
+        <p class="short-desc">O mapa de navegação das armaduras de clave.</p>
+        <div class="details">
+          <p>Avançar em quintas ascendentes adiciona sustenidos à armadura de clave na ordem: Fá♯, Dó♯, Sol♯, Ré♯, Lá♯, Mi♯, Si♯. Avançar em quartas ascendentes adiciona bemóis: Si♭, Mi♭, Lá♭, Ré♭, Sol♭, Dó♭, Fá♭.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 10 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Construção Harmônica</span>
+        <h2>10. Tríades e Tétrades</h2>
+        <p class="short-desc">Empilhamento de terças para formação de acordes.</p>
+        <div class="details">
+          <p><strong>Tríades</strong> possuem 3 notas (Fundamental, Terça e Quinta). Podem ser Maiores, Menores, Diminutas ou Aumentadas. <strong>Tétrades</strong> adicionam o 4º elemento: a Sétima (ex: 7M, 7, m7, m7(♭5), º).</p>
+          <button class="audio-btn" onclick="playChord([261.63, 329.63, 392.00], event)">▶ Ouvir Tríade Maior (Dó)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 11 -->
+    <div class="timeline-item left">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Inversão e Vozes</span>
+        <h2>11. Inversões de Acordes e Sextas</h2>
+        <p class="short-desc">Mudança da nota do baixo e extensões de cor.</p>
+        <div class="details">
+          <p>Quando a fundamental não está no grave, o acorde está invertido: 1ª Inversão (Terça no baixo) ou 2ª Inversão (Quinta no baixo). Acordes com 6ª maior adicionam uma cor tonal rica e frequentemente compartilham notas com inversões de tétrades.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evento 12 -->
+    <div class="timeline-item right">
+      <div class="content" onclick="toggleCard(this)">
+        <span class="tag">Sintaxe Harmônica</span>
+        <h2>12. Campo Harmônico e Cadências</h2>
+        <p class="short-desc">Tensão, repouso e movimento na música.</p>
+        <div class="details">
+          <p>O Campo Harmônico organiza os acordes gerados sobre cada grau da escala. Suas funções básicas são <strong>Tônica</strong> (estabilidade), <strong>Subdominante</strong> (afastamento) e <strong>Dominante</strong> (tensão). As <strong>Cadências</strong> (Perfeita, Plagal, Deceptiva) atuam como a pontuação musical.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Projeto de Estruturação Musical — Desenvolvido para publicação interativa no GitHub Pages.</p>
+  </footer>
+
+  <script>
+    // Expandir/recolher os cards da linha do tempo
+    function toggleCard(card) {
+      card.classList.toggle('active');
+    }
+
+    // Compartilhar o link do projeto
+    function shareTimeline() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Linha do Tempo: Estruturação Musical',
+          url: window.location.href
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copiado para a área de transferência!');
+      }
+    }
+
+    // Web Audio API para síntese de som interativa
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, duration, event) {
+      event.stopPropagation();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playInterval(freq1, freq2, event) {
+      event.stopPropagation();
+      playTone(freq1, 1.2, event);
+      setTimeout(() => playTone(freq2, 1.2, event), 400);
+    }
+
+    function playChord(freqs, event) {
+      event.stopPropagation();
+      freqs.forEach(f => playTone(f, 2.0, event));
+    }
+  </script>
+</body>
+</html>
